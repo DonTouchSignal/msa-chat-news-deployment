@@ -74,37 +74,6 @@ jobs:
             # 서비스 배포 및 실행
             cd /home/$USER/app
             
-            # docker-compose.yml 수정 - 빌드 컨텍스트 수정
-            cat > docker-compose.yml << 'EOL'
-            version: '3.7'
-            services:
-              msa-news:
-                build:
-                  context: .
-                  dockerfile: ./msa-news/Dockerfile
-                container_name: msa-news
-                ports:
-                  - "8086:8086"
-                environment:
-                  - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://34.210.11.121:8761/eureka/
-                networks:
-                  - msa-network
-                restart: always
-
-            networks:
-              msa-network:
-                driver: bridge
-            EOL
-            
-            # Dockerfile 수정
-            cat > msa-news/Dockerfile << 'EOL'
-            FROM openjdk:17-jdk-alpine
-            WORKDIR /app
-            COPY msa-news/build/libs/msa-sb-news-0.0.1-SNAPSHOT.jar app.jar
-            EXPOSE 8086
-            ENTRYPOINT ["java", "-jar", "app.jar"]
-            EOL
-            
             # 이전 서비스 중지 및 새 서비스 시작
             docker-compose stop msa-news || true
             docker-compose rm -f msa-news || true
