@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  msa-news:
+    build:
+      context: .
+      dockerfile: ./msa-news/Dockerfile
+    container_name: msa-news
+    ports:
+      - "8086:8086"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://34.210.11.121:8761/eureka/
+    networks:
+      - msa-network
+    restart: always
+
+networks:
+  msa-network:
+    driver: bridge
